@@ -17,9 +17,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileManagerService {
+public final class FileManagerService {
 
-  private final static Logger LOGGER;
+  private static final Logger LOGGER;
 
   static {
     LOGGER = Logger.getLogger("com.antonr.inputoutputstreams.filemanager.FileManagerService");
@@ -30,7 +30,7 @@ public class FileManagerService {
     LOGGER.setUseParentHandlers(false);
   }
 
-  private static final int INIT_FILE_SIZE = 1024;
+  private static final int INITIAL_BUFFER_SIZE = 1024;
 
   static int getNumberOfObjectInDirectoryWithDependentDirectories(int numberOfFiles, String path,
       int originalPathLength, Function<File, Boolean> countFilesOrDirs) {
@@ -70,18 +70,17 @@ public class FileManagerService {
   }
 
   private static void moveElement(File src, File dest) {
-    boolean fileRenamed = src.renameTo(dest);
-    if (fileRenamed) {
+    if (src.renameTo(dest)) {
       LOGGER.log(Level.FINE,
-          "File: " + src.getAbsolutePath() + " was successfully renamed to " + dest.getAbsolutePath());
+          "File: " + src.getAbsolutePath() + " was successfully renamed to " + dest
+              .getAbsolutePath());
     } else {
       LOGGER.log(Level.WARNING, "Cannot rename file " + src.getAbsolutePath());
     }
   }
 
   private static void creteDirectory(File src, File dest) {
-    boolean directoryCreated = dest.mkdirs();
-    if (directoryCreated) {
+    if (dest.mkdirs()) {
       LOGGER.log(Level.FINE, "File: " + dest.getAbsolutePath() + " was successfully created!");
     } else {
       LOGGER.log(Level.WARNING, "Cannot create file: " + src.getAbsolutePath());
@@ -93,11 +92,10 @@ public class FileManagerService {
     try (
         InputStream in = new BufferedInputStream(new FileInputStream(src));
         OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
-      byte[] buffer = new byte[INIT_FILE_SIZE];
+      byte[] buffer = new byte[INITIAL_BUFFER_SIZE];
       int lengthRead;
       while ((lengthRead = in.read(buffer)) > 0) {
         out.write(buffer, 0, lengthRead);
-        out.flush();
       }
     } catch (IOException e) {
       throw new RuntimeException("File cannot be created");

@@ -5,13 +5,15 @@ import java.io.File;
 public class FileManager {
 
   public static int countFiles(String path) {
-    return FileManagerService.getNumberOfObjectInDirectoryWithDependentDirectories(0, path, path.length(),
-        File::isFile);
+    return FileManagerService
+        .getNumberOfObjectInDirectoryWithDependentDirectories(0, path, path.length(),
+            File::isFile);
   }
 
   public static int countDirs(String path) {
-    return FileManagerService.getNumberOfObjectInDirectoryWithDependentDirectories(0, path, path.length(),
-        File::isDirectory);
+    return FileManagerService
+        .getNumberOfObjectInDirectoryWithDependentDirectories(0, path, path.length(),
+            File::isDirectory);
   }
 
   public static void copy(String from, String to) {
